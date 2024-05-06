@@ -20,8 +20,8 @@ public class QuoteMapper {
     public static PonctualQuoteDTO mapJSONToQuote(String quote) throws JsonProcessingException {
         String formattedQuote = quote.replace("\\\"", "\"");
         formattedQuote = formattedQuote.substring(1, formattedQuote.length() - 1);
+        LOGGER.info("Formatted quote: " + formattedQuote);
         ObjectMapper objectMapper = new ObjectMapper();
-        LOGGER.info("formattedQuote: " + formattedQuote);
         return objectMapper.readValue(formattedQuote, PonctualQuoteDTO.class);
     }
 }

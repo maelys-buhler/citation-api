@@ -65,6 +65,9 @@ public class QuoteServiceImpl implements QuoteService {
     public void sendNewHourlyQuote(HourlyRequestDTO hourlyRequestDTO) {
         if (hourlyRequestDTO.getType().equals("hourly")) {
             QuoteDTO quoteDTO = getRandom();
+            if(quoteDTO == null){
+                return;
+            }
             jmsMessageProducer.sendHourlyAnswer(quoteDTO);
         }
     }

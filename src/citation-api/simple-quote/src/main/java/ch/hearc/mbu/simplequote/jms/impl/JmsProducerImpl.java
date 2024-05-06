@@ -29,7 +29,9 @@ public class JmsProducerImpl implements JmsMessageProducer {
     public void sendHourlyAnswer(QuoteDTO quoteDTO) {
         String jsonMessage = null;
         try {
+            LOGGER.info("Hourly request received: " + quoteDTO.toString());
             jsonMessage = RequestMapper.mapQuoteToJSON(quoteDTO);
+            LOGGER.info("Hourly request: " + jsonMessage);
             jmsTemplate.convertAndSend(hourlyAnswerQueue, jsonMessage);
             LOGGER.info("Hourly request sent to queue: " + hourlyAnswerQueue);
         } catch (JsonProcessingException e) {

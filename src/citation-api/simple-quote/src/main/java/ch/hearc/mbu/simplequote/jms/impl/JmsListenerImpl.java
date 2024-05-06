@@ -23,14 +23,15 @@ public class JmsListenerImpl implements JmsMessageListener {
     QuoteService quoteService;
 
     @Override
-    @JmsListener(destination = "${spring.activemq.hourly.answer.queue}")
+    @JmsListener(destination = "${spring.activemq.hourly.request.queue}")
     public void listenHourlyRequest(final TextMessage jsonMessage) throws JMSException {
         String messageData = null;
         if(jsonMessage != null) {
             messageData = jsonMessage.getText();
-            LOGGER.info("Listen hourly request message received from queue:");
+            LOGGER.info("Listen hourly request message received from queue");
             try {
                 HourlyRequestDTO request = RequestMapper.mapJSONToObject(messageData);
+                quoteService.sendNewHourlyQuote(request);
             }
             catch (JsonProcessingException e) {
                 LOGGER.error("Error while parsing hourly request message");

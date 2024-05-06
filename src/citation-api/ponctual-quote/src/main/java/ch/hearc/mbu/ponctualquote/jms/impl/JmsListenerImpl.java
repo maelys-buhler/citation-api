@@ -25,10 +25,10 @@ public class JmsListenerImpl implements JmsMessageListener {
     @Override
     @JmsListener(destination = "${spring.activemq.hourly.answer.queue}")
     public void listenHourlyAnswer(final TextMessage jsonMessage) throws JMSException {
-        String messageData = null;
+        LOGGER.info("Listen hourly answer message received from queue");
+        LOGGER.info("data received: " + jsonMessage.getText());
         if(jsonMessage != null) {
-            messageData = jsonMessage.getText();
-            LOGGER.info("Listen hourly request message received from queue:");
+            String messageData = jsonMessage.getText();
             try {
                 PonctualQuoteDTO quote = QuoteMapper.mapJSONToQuote(messageData);
                 ponctualQuoteService.setNewHourly(quote);
@@ -45,10 +45,9 @@ public class JmsListenerImpl implements JmsMessageListener {
 
     @Override
     @JmsListener(destination = "${spring.activemq.lastadded.notif.queue}")
-    public void listenLastAddedQuote(final TextMessage jsonMessage) throws JMSException, JsonProcessingException {
-        String messageData = null;
+    public void listenLastAddedQuote(final TextMessage jsonMessage) throws JMSException {
         if(jsonMessage != null) {
-            messageData = jsonMessage.getText();
+            String messageData = jsonMessage.getText();
             LOGGER.info("Listen last added quote message received from queue");
             try {
                 PonctualQuoteDTO quote = QuoteMapper.mapJSONToQuote(messageData);

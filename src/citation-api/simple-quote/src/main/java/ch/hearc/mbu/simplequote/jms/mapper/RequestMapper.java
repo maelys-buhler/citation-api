@@ -9,7 +9,9 @@ public class RequestMapper {
 
     public static HourlyRequestDTO mapJSONToObject(String request) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(request, HourlyRequestDTO.class);
+        String formattedRequest = request.replace("\\\"", "\"");
+        formattedRequest = formattedRequest.substring(1, formattedRequest.length() - 1);
+        return objectMapper.readValue(formattedRequest, HourlyRequestDTO.class);
     }
 
     public static String mapQuoteToJSON(QuoteDTO quoteDTO) throws JsonProcessingException {
