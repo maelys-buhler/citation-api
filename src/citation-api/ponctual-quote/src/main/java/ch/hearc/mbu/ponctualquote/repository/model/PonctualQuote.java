@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "poncual_quotes")
+@Table(name = "quotes")
 public class PonctualQuote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

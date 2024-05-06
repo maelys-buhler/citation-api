@@ -23,7 +23,12 @@ public class PonctualQuoteServiceImpl implements PonctualQuoteService {
 
     @Override
     public PonctualQuote setNewLastAdded(PonctualQuoteDTO dto) {
-        PonctualQuote entity = new PonctualQuote();
+        PonctualQuote entity = ponctualQuoteRepository.getLastAddedQuote();
+        if (entity != null) {
+            entity.setStatus(QuoteStatus.NONE);
+            ponctualQuoteRepository.save(entity);
+        }
+        entity = new PonctualQuote();
         entity.setQuote(dto.getQuote());
         entity.setAuthor(dto.getAuthor());
         entity.setStatus(QuoteStatus.LAST_ADDED);
@@ -44,9 +49,14 @@ public class PonctualQuoteServiceImpl implements PonctualQuoteService {
     @Override
     public void nextPlaylistQuote() {
         PonctualQuote entity = ponctualQuoteRepository.getPlaylistQuote();
-        entity.setStatus(QuoteStatus.NONE);
-        ponctualQuoteRepository.save(entity);
+        if (entity != null) {
+            entity.setStatus(QuoteStatus.NONE);
+            ponctualQuoteRepository.save(entity);
+        }
         PonctualQuote newPlaylistQuote = ponctualQuoteRepository.getRandomNone();
+        if (newPlaylistQuote == null) {
+            return;
+        }
         newPlaylistQuote.setStatus(QuoteStatus.PLAYLIST);
         ponctualQuoteRepository.save(newPlaylistQuote);
     }
@@ -54,18 +64,32 @@ public class PonctualQuoteServiceImpl implements PonctualQuoteService {
     @Override
     public PonctualQuoteDTO getPlaylistQuote() {
         PonctualQuote entity = ponctualQuoteRepository.getPlaylistQuote();
+        if(entity == null) {
+            nextPlaylistQuote();
+            entity = ponctualQuoteRepository.getPlaylistQuote();
+            if (entity == null)
+            {
+                return null;
+            }
+        }
         return convertToDTO(entity);
     }
 
     @Override
     public PonctualQuoteDTO getHourlyQuote() {
         PonctualQuote entity = ponctualQuoteRepository.getHourlyQuote();
+        if(entity == null) {
+            return null;
+        }
         return convertToDTO(entity);
     }
 
     @Override
     public PonctualQuoteDTO getLastAddedQuote() {
         PonctualQuote entity = ponctualQuoteRepository.getLastAddedQuote();
+        if(entity == null) {
+            return null;
+        }
         return convertToDTO(entity);
     }
 }
