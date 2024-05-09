@@ -38,12 +38,17 @@ public class PonctualQuoteServiceImpl implements PonctualQuoteService {
 
     @Override
     public PonctualQuote setNewHourly(PonctualQuoteDTO dto) {
-        PonctualQuote entity = new PonctualQuote();
-        entity.setQuote(dto.getQuote());
-        entity.setAuthor(dto.getAuthor());
-        entity.setStatus(QuoteStatus.HOURLY);
-        ponctualQuoteRepository.save(entity);
-        return entity;
+        PonctualQuote entity = ponctualQuoteRepository.getHourlyQuote();
+        if (entity != null) {
+            entity.setStatus(QuoteStatus.NONE);
+            ponctualQuoteRepository.save(entity);
+        }
+        PonctualQuote newPlaylistQuote = new PonctualQuote();
+        newPlaylistQuote.setQuote(dto.getQuote());
+        newPlaylistQuote.setAuthor(dto.getAuthor());
+        newPlaylistQuote.setStatus(QuoteStatus.HOURLY);
+        ponctualQuoteRepository.save(newPlaylistQuote);
+        return newPlaylistQuote;
     }
 
     @Override

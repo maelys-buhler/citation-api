@@ -17,7 +17,7 @@ public class ScheduledTasks {
     @Autowired
     JmsMessageProducer jmsMessageProducer;
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(fixedRate = 60 * 60 * 1000)
     public void sendHourlyRequest() {
         jmsMessageProducer.sendHourlyRequest();
         LOGGER.info("Hourly Scheduled Task executed");
