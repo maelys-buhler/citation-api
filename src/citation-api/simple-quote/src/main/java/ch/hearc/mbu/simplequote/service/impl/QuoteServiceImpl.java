@@ -1,10 +1,12 @@
 package ch.hearc.mbu.simplequote.service.impl;
 
+import ch.hearc.mbu.simplequote.dto.HourlyRequestDTO;
 import ch.hearc.mbu.simplequote.dto.QuoteDTO;
 import ch.hearc.mbu.simplequote.repository.model.Author;
 import ch.hearc.mbu.simplequote.repository.model.Quote;
 import ch.hearc.mbu.simplequote.repository.AuthorRepository;
 import ch.hearc.mbu.simplequote.repository.QuoteRepository;
+import ch.hearc.mbu.simplequote.jms.JmsMessageProducer;
 import ch.hearc.mbu.simplequote.service.QuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,9 @@ public class QuoteServiceImpl implements QuoteService {
 
     @Autowired
     private AuthorRepository authorRepository;
+
+    @Autowired
+    private JmsMessageProducer jmsMessageProducer;
 
     @Override
     public QuoteDTO convertToDTO(Quote quote) {
@@ -42,7 +47,9 @@ public class QuoteServiceImpl implements QuoteService {
     @Override
     public long create(QuoteDTO dto) {
         authorRepository.save(convertToEntity(dto).getAuthor());
-        return quoteRepository.save(convertToEntity(dto)).getId();
+        Quote quote = quoteRepository.save(convertToEntity(dto));
+        jmsMessageProducer.sendLastAddedQuote(convertToDTO(quote));
+        return quote.getId();
     }
 
     @Override
@@ -52,6 +59,17 @@ public class QuoteServiceImpl implements QuoteService {
             return null;
         }
         return convertToDTO(quote);
+    }
+
+    @Override
+    public void sendNewHourlyQuote(HourlyRequestDTO hourlyRequestDTO) {
+        if (hourlyRequestDTO.getType().equals("hourly")) {
+            QuoteDTO quoteDTO = getRandom();
+            if(quoteDTO == null){
+                return;
+            }
+            jmsMessageProducer.sendHourlyAnswer(quoteDTO);
+        }
     }
 
     @Override
