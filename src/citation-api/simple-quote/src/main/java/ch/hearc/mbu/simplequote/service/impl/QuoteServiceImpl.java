@@ -62,13 +62,10 @@ public class QuoteServiceImpl implements QuoteService {
     }
 
     @Override
-    public void sendNewHourlyQuote(HourlyRequestDTO hourlyRequestDTO) {
+    public void sendNewHourlyQuote(HourlyRequestDTO hourlyRequestDTO, String correlationID) {
         if (hourlyRequestDTO.getType().equals("hourly")) {
             QuoteDTO quoteDTO = getRandom();
-            if(quoteDTO == null){
-                return;
-            }
-            jmsMessageProducer.sendHourlyAnswer(quoteDTO);
+            jmsMessageProducer.sendHourlyAnswer(quoteDTO, correlationID);
         }
     }
 

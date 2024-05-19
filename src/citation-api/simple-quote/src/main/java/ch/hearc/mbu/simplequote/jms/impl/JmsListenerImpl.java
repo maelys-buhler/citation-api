@@ -28,10 +28,11 @@ public class JmsListenerImpl implements JmsMessageListener {
         String messageData = null;
         if(jsonMessage != null) {
             messageData = jsonMessage.getText();
+            String correlationID = jsonMessage.getJMSCorrelationID();
             LOGGER.info("Listen hourly request message received from queue");
             try {
                 HourlyRequestDTO request = RequestMapper.mapJSONToObject(messageData);
-                quoteService.sendNewHourlyQuote(request);
+                quoteService.sendNewHourlyQuote(request, correlationID);
             }
             catch (JsonProcessingException e) {
                 LOGGER.error("Error while parsing hourly request message");

@@ -1,4 +1,4 @@
-package ch.hearc.mbu.ponctualquote.jms;
+package ch.hearc.mbu.ponctualquote.jms_async;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

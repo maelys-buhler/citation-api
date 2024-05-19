@@ -10,7 +10,7 @@ public class RequestMapper {
     public static HourlyRequestDTO mapJSONToObject(String request) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         String formattedRequest = request.replace("\\\"", "\"");
-        formattedRequest = formattedRequest.substring(1, formattedRequest.length() - 1);
+        System.out.println(formattedRequest);
         return objectMapper.readValue(formattedRequest, HourlyRequestDTO.class);
     }
 

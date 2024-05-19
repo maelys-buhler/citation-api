@@ -1,7 +1,6 @@
-package ch.hearc.mbu.ponctualquote.jms.mapper;
+package ch.hearc.mbu.ponctualquote.jms_async.mapper;
 
 import ch.hearc.mbu.ponctualquote.dto.PonctualQuoteDTO;
-import ch.hearc.mbu.ponctualquote.jms.impl.JmsProducerImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;

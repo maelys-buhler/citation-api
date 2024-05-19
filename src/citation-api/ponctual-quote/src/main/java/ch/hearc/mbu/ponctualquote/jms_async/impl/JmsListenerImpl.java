@@ -1,8 +1,8 @@
-package ch.hearc.mbu.ponctualquote.jms.impl;
+package ch.hearc.mbu.ponctualquote.jms_async.impl;
 
 import ch.hearc.mbu.ponctualquote.dto.PonctualQuoteDTO;
-import ch.hearc.mbu.ponctualquote.jms.JmsMessageListener;
-import ch.hearc.mbu.ponctualquote.jms.mapper.QuoteMapper;
+import ch.hearc.mbu.ponctualquote.jms_async.JmsMessageListener;
+import ch.hearc.mbu.ponctualquote.jms_async.mapper.QuoteMapper;
 import ch.hearc.mbu.ponctualquote.service.PonctualQuoteService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.jms.JMSException;
@@ -22,26 +22,26 @@ public class JmsListenerImpl implements JmsMessageListener {
     @Autowired
     PonctualQuoteService ponctualQuoteService;
 
-    @Override
-    @JmsListener(destination = "${spring.activemq.hourly.answer.queue}")
-    public void listenHourlyAnswer(final TextMessage jsonMessage) throws JMSException {
-        LOGGER.info("Listen hourly answer message received from queue");
-        LOGGER.info("data received: " + jsonMessage.getText());
-        if(jsonMessage != null) {
-            String messageData = jsonMessage.getText();
-            try {
-                PonctualQuoteDTO quote = QuoteMapper.mapJSONToQuote(messageData);
-                ponctualQuoteService.setNewHourly(quote);
-            }
-            catch (JsonProcessingException e) {
-                LOGGER.error("Error while parsing hourly request message");
-            }
-        }
-        else
-        {
-            LOGGER.error("Empty message received from hourly queue");
-        }
-    }
+//    @Override
+//    @JmsListener(destination = "${spring.activemq.hourly.answer.queue}")
+//    public void listenHourlyAnswer(final TextMessage jsonMessage) throws JMSException {
+//        LOGGER.info("Listen hourly answer message received from queue");
+//        LOGGER.info("data received: " + jsonMessage.getText());
+//        if(jsonMessage != null) {
+//            String messageData = jsonMessage.getText();
+//            try {
+//                PonctualQuoteDTO quote = QuoteMapper.mapJSONToQuote(messageData);
+//                ponctualQuoteService.setNewHourly(quote);
+//            }
+//            catch (JsonProcessingException e) {
+//                LOGGER.error("Error while parsing hourly request message");
+//            }
+//        }
+//        else
+//        {
+//            LOGGER.error("Empty message received from hourly queue");
+//        }
+//    }
 
     @Override
     @JmsListener(destination = "${spring.activemq.lastadded.notif.queue}")

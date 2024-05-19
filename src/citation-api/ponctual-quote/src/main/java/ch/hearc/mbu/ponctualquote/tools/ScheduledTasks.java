@@ -1,8 +1,7 @@
 package ch.hearc.mbu.ponctualquote.tools;
 
-import ch.hearc.mbu.ponctualquote.jms.JmsMessageProducer;
-import ch.hearc.mbu.ponctualquote.jms.impl.JmsListenerImpl;
-import ch.hearc.mbu.ponctualquote.service.PonctualQuoteService;
+import ch.hearc.mbu.ponctualquote.jms_async.JmsMessageProducer;
+import ch.hearc.mbu.ponctualquote.jms_sync.SyncMessageClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +14,11 @@ public class ScheduledTasks {
             .getLogger(ScheduledTasks.class);
 
     @Autowired
-    JmsMessageProducer jmsMessageProducer;
+    SyncMessageClient syncMessageClient;
 
-    @Scheduled(fixedRate = 60 * 60 * 1000)
+    @Scheduled(fixedRate = 10 * 1000)
     public void sendHourlyRequest() {
-        jmsMessageProducer.sendHourlyRequest();
         LOGGER.info("Hourly Scheduled Task executed");
+        syncMessageClient.request("{\"type\":\"hourly\"}");
     }
 }

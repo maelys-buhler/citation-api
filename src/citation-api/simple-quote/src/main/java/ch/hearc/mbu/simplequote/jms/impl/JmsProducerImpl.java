@@ -26,13 +26,21 @@ public class JmsProducerImpl implements JmsMessageProducer {
     JmsTemplate jmsTemplate;
 
     @Override
-    public void sendHourlyAnswer(QuoteDTO quoteDTO) {
+    public void sendHourlyAnswer(QuoteDTO quoteDTO, String correlationID) {
         String jsonMessage = null;
         try {
-            LOGGER.info("Hourly request received: " + quoteDTO.toString());
-            jsonMessage = RequestMapper.mapQuoteToJSON(quoteDTO);
+
+            jsonMessage = "{\"error\":\"No quote available\"}";
+            if(quoteDTO != null)
+            {
+                LOGGER.info("Hourly request received: " + quoteDTO.toString());
+                jsonMessage = RequestMapper.mapQuoteToJSON(quoteDTO);
+            }
             LOGGER.info("Hourly request: " + jsonMessage);
-            jmsTemplate.convertAndSend(hourlyAnswerQueue, jsonMessage);
+            jmsTemplate.convertAndSend(hourlyAnswerQueue, jsonMessage, message -> {
+                message.setJMSCorrelationID(correlationID);
+                return message;
+            });
             LOGGER.info("Hourly request sent to queue: " + hourlyAnswerQueue);
         } catch (JsonProcessingException e) {
             LOGGER.error("Error while mapping QuoteDTO to JSON: " + e.getMessage());
