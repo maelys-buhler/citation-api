@@ -10,19 +10,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 
 import java.util.function.Function;
 
 @Component
-public class CallbackCreator {
+public class ActionCreator {
     private static final Logger LOGGER = LoggerFactory
-            .getLogger(CallbackCreator.class);
+            .getLogger(ActionCreator.class);
 
     @Autowired
     PonctualQuoteService ponctualQuoteService;
 
-    public Function<Message, Boolean> createHourlyAnswerCallback()
+    public Function<Message, Boolean> createHourlyAnswerAction()
     {
         return (Message message) -> {
             LOGGER.info("Listen hourly answer message received from queue");
@@ -53,7 +52,7 @@ public class CallbackCreator {
         };
     }
 
-    public Function<Message, Boolean> createPlaylistAnswerCallback()
+    public Function<Message, Boolean> createPlaylistAnswerAction()
     {
         return (Message message) -> {
             LOGGER.info("Listen playlist answer message received from queue");

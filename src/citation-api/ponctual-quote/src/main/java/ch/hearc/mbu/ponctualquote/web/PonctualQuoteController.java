@@ -1,7 +1,7 @@
 package ch.hearc.mbu.ponctualquote.web;
 
 import ch.hearc.mbu.ponctualquote.dto.PonctualQuoteDTO;
-import ch.hearc.mbu.ponctualquote.jms_sync.CallbackCreator;
+import ch.hearc.mbu.ponctualquote.jms_sync.ActionCreator;
 import ch.hearc.mbu.ponctualquote.jms_sync.SyncMessageClient;
 import ch.hearc.mbu.ponctualquote.service.PonctualQuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class PonctualQuoteController {
     private SyncMessageClient syncMessageClient;
 
     @Autowired
-    private CallbackCreator callbackCreator;
+    private ActionCreator actionCreator;
 
     @Value("${spring.activemq.playlist.request.queue}")
     private String playlistRequestQueue;
@@ -42,7 +42,7 @@ public class PonctualQuoteController {
     public ResponseEntity<?> getPlaylistQuote() {
         PonctualQuoteDTO quote = ponctualQuoteService.getPlaylistQuote();
         if(quote == null) {
-            syncMessageClient.request("{\"type\":\"hourly\"}", playlistRequestQueue , playlistAnswerQueue, callbackCreator.createPlaylistAnswerCallback());
+            syncMessageClient.request("{\"type\":\"hourly\"}", playlistRequestQueue , playlistAnswerQueue, actionCreator.createPlaylistAnswerAction());
              quote = ponctualQuoteService.getPlaylistQuote();
              if(quote == null)
              {
@@ -63,7 +63,7 @@ public class PonctualQuoteController {
 
     @PostMapping("/next-playlist")
     public ResponseEntity<?> nextPlaylistQuote() {
-        syncMessageClient.request("{\"type\":\"hourly\"}", playlistRequestQueue , playlistAnswerQueue, callbackCreator.createPlaylistAnswerCallback());
+        syncMessageClient.request("{\"type\":\"hourly\"}", playlistRequestQueue , playlistAnswerQueue, actionCreator.createPlaylistAnswerAction());
         return ResponseEntity.ok().build();
     }
 }

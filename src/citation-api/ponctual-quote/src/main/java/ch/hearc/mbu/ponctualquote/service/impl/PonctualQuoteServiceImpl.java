@@ -1,14 +1,12 @@
 package ch.hearc.mbu.ponctualquote.service.impl;
 
 import ch.hearc.mbu.ponctualquote.dto.PonctualQuoteDTO;
-import ch.hearc.mbu.ponctualquote.jms_sync.CallbackCreator;
 import ch.hearc.mbu.ponctualquote.jms_sync.SyncMessageClient;
 import ch.hearc.mbu.ponctualquote.repository.PonctualQuoteRepository;
 import ch.hearc.mbu.ponctualquote.repository.model.PonctualQuote;
 import ch.hearc.mbu.ponctualquote.repository.model.QuoteStatus;
 import ch.hearc.mbu.ponctualquote.service.PonctualQuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service

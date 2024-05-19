@@ -1,7 +1,6 @@
 package ch.hearc.mbu.ponctualquote.tools;
-import ch.hearc.mbu.ponctualquote.jms_sync.CallbackCreator;
+import ch.hearc.mbu.ponctualquote.jms_sync.ActionCreator;
 import ch.hearc.mbu.ponctualquote.jms_sync.SyncMessageClient;
-import ch.hearc.mbu.ponctualquote.service.PonctualQuoteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,7 @@ public class ScheduledTasks {
     SyncMessageClient syncMessageClient;
 
     @Autowired
-    CallbackCreator callbackCreator;
+    ActionCreator actionCreator;
 
     @Value("${spring.activemq.hourly.answer.queue}")
     private String hourlyAnswerQueue;
@@ -30,6 +29,6 @@ public class ScheduledTasks {
     @Scheduled(fixedRate = 10 * 1000)
     public void sendHourlyRequest() {
         LOGGER.info("Hourly Scheduled Task executed");
-        syncMessageClient.request("{\"type\":\"hourly\"}", hourlyRequestQueue, hourlyAnswerQueue, callbackCreator.createHourlyAnswerCallback());
+        syncMessageClient.request("{\"type\":\"hourly\"}", hourlyRequestQueue, hourlyAnswerQueue, actionCreator.createHourlyAnswerAction());
     }
 }
