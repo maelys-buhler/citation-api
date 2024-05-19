@@ -1,0 +1,36 @@
+# Paranmétrage applicatif de base
+spring:
+    application:
+        name: api-gateway
+        #Paramétrage des routes
+    cloud:
+        gateway:
+            routes:
+                -   id: simple-quote
+                    uri: lb://SIMPLE-QUOTE
+                    predicates:
+                        - Path=/simple-quote/**
+                    filters:
+                        - StripPrefix=1
+                -   id: ponctual-quote
+                    uri: lb://PONCTUAL-QUOTE
+                    predicates:
+                        - Path=/ponctual-quote/**
+                    filters:
+                        - StripPrefix=1
+server:
+    port: 9999
+# Paramétrage avec eureka discovery
+eureka:
+    client:
+        serviceUrl:
+            defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+# Paramétrage des endpoints actuator
+management:
+    endpoint:
+        gateway:
+            enabled: true
+    endpoints:
+        web:
+            exposure:
+                include: "*"
