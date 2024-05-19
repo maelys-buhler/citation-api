@@ -5,5 +5,4 @@ import jakarta.jms.TextMessage;
 
 public interface JmsMessageListener {
     void listenHourlyRequest(final TextMessage jsonMessage) throws JMSException;
-    public void listenPlaylistRequest(final TextMessage jsonMessage) throws JMSException;
 }

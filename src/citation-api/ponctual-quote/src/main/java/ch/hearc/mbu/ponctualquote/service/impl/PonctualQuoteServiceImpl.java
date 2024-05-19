@@ -3,6 +3,8 @@ package ch.hearc.mbu.ponctualquote.service.impl;
 import ch.hearc.mbu.ponctualquote.dto.AuthorDTO;
 import ch.hearc.mbu.ponctualquote.dto.PonctualQuoteDTO;
 import ch.hearc.mbu.ponctualquote.jms_sync.SyncMessageClient;
+import ch.hearc.mbu.ponctualquote.remote.SimpleQuoteRemoteServiceClient;
+import ch.hearc.mbu.ponctualquote.remote.models.QuoteResponseBody;
 import ch.hearc.mbu.ponctualquote.repository.AuthorRepository;
 import ch.hearc.mbu.ponctualquote.repository.PonctualQuoteRepository;
 import ch.hearc.mbu.ponctualquote.repository.model.Author;
@@ -12,17 +14,19 @@ import ch.hearc.mbu.ponctualquote.service.PonctualQuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class PonctualQuoteServiceImpl implements PonctualQuoteService {
+
+    @Autowired
+    SimpleQuoteRemoteServiceClient simpleQuoteRemoteServiceClient;
 
     @Autowired
     private PonctualQuoteRepository ponctualQuoteRepository;
 
     @Autowired
     private AuthorRepository authorRepository;
-
-    @Autowired
-    private SyncMessageClient syncMessageClient;
 
     private PonctualQuoteDTO convertToDTO(PonctualQuote entity) {
         PonctualQuoteDTO dto = new PonctualQuoteDTO();
@@ -78,7 +82,16 @@ public class PonctualQuoteServiceImpl implements PonctualQuoteService {
     }
 
     @Override
-    public PonctualQuote setNewPlaylist(PonctualQuoteDTO dto) {
+    public void setNewPlaylist() {
+        Optional<QuoteResponseBody> answer = simpleQuoteRemoteServiceClient.getRandomQuote();
+        if (!answer.isPresent()) {
+            return;
+        }
+        QuoteResponseBody quote = answer.get();
+        PonctualQuoteDTO dto = new PonctualQuoteDTO();
+        dto.setQuote(quote.getQuote());
+        dto.setAuthor(quote.getAuthor());
+
         PonctualQuote entity = ponctualQuoteRepository.getPlaylistQuote();
         if (entity != null) {
             entity.setStatus(QuoteStatus.NONE);
@@ -89,7 +102,6 @@ public class PonctualQuoteServiceImpl implements PonctualQuoteService {
         newPlaylistQuote.setAuthor(dto.getAuthor());
         newPlaylistQuote.setStatus(QuoteStatus.PLAYLIST);
         ponctualQuoteRepository.save(newPlaylistQuote);
-        return newPlaylistQuote;
     }
 
     @Override
