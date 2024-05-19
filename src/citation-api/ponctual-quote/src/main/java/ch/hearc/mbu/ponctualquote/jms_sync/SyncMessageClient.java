@@ -29,7 +29,7 @@ public class SyncMessageClient {
     @Autowired
     PonctualQuoteService ponctualQuoteService;
 
-// TODO You are here: https://bdarfler.medium.com/synchronous-request-response-with-activemq-and-spring-21359a438a86
+    // Source: https://bdarfler.medium.com/synchronous-request-response-with-activemq-and-spring-21359a438a86
     private static final class ProducerConsumer implements SessionCallback<Message> {
         private final Logger LOGGER = LoggerFactory
                 .getLogger(ProducerConsumer.class);
