@@ -51,35 +51,4 @@ public class ActionCreator {
             return true;
         };
     }
-
-    public Function<Message, Boolean> createPlaylistAnswerAction()
-    {
-        return (Message message) -> {
-            LOGGER.info("Listen playlist answer message received from queue");
-            String messageData = null;
-            try {
-                messageData = message.getBody(String.class);
-            } catch (JMSException e) {
-                LOGGER.error("Could not get message body to string");
-                return false;
-            }
-            LOGGER.info("data received: " + messageData);
-            if(messageData != null) {
-                try {
-                    PonctualQuoteDTO quote = QuoteMapper.mapJSONToQuote(messageData);
-                    ponctualQuoteService.setNewPlaylist(quote);
-                }
-                catch (JsonProcessingException e) {
-                    LOGGER.warn("The message received is not a valid Quote. This probably means that the message received is an error message, indicating that no quote is available.");
-                    return false;
-                }
-            }
-            else
-            {
-                LOGGER.error("Empty message received from hourly queue");
-                return false;
-            }
-            return true;
-        };
-    }
 }

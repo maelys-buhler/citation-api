@@ -10,7 +10,7 @@ public interface PonctualQuoteService {
     PonctualQuote setNewLastAdded(PonctualQuoteDTO dto);
     Author setNewLastAddedAuthor(AuthorDTO dto);
     PonctualQuote setNewHourly(PonctualQuoteDTO dto);
-    PonctualQuote setNewPlaylist(PonctualQuoteDTO dto);
+    void setNewPlaylist();
     PonctualQuoteDTO getPlaylistQuote();
     PonctualQuoteDTO getHourlyQuote();
     PonctualQuoteDTO getLastAddedQuote();

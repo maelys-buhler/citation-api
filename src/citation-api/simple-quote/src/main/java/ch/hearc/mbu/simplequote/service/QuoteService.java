@@ -12,7 +12,6 @@ public interface QuoteService {
     public long create(QuoteDTO dto);
     public QuoteDTO get(long id);
     public void sendNewHourlyQuote(HourlyRequestDTO hourlyRequestDTO, String correlationID);
-    public void sendNewPlaylistQuote(HourlyRequestDTO hourlyRequestDTO, String correlationID);
 
     public QuoteDTO getRandom();
 }

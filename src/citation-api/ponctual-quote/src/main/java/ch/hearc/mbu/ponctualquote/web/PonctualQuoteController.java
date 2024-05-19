@@ -19,18 +19,6 @@ public class PonctualQuoteController {
     @Autowired
     private PonctualQuoteService ponctualQuoteService;
 
-    @Autowired
-    private SyncMessageClient syncMessageClient;
-
-    @Autowired
-    private ActionCreator actionCreator;
-
-    @Value("${spring.activemq.playlist.request.queue}")
-    private String playlistRequestQueue;
-
-    @Value("${spring.activemq.playlist.answer.queue}")
-    private String playlistAnswerQueue;
-
     @GetMapping("/hourly")
     public ResponseEntity<?> getHourlyQuote() {
          PonctualQuoteDTO quote = ponctualQuoteService.getHourlyQuote();
@@ -44,12 +32,12 @@ public class PonctualQuoteController {
     public ResponseEntity<?> getPlaylistQuote() {
         PonctualQuoteDTO quote = ponctualQuoteService.getPlaylistQuote();
         if(quote == null) {
-            syncMessageClient.request("{\"type\":\"hourly\"}", playlistRequestQueue , playlistAnswerQueue, actionCreator.createPlaylistAnswerAction());
-             quote = ponctualQuoteService.getPlaylistQuote();
-             if(quote == null)
-             {
-                    return ResponseEntity.notFound().build();
-             }
+            ponctualQuoteService.setNewPlaylist();
+            quote = ponctualQuoteService.getPlaylistQuote();
+            if(quote == null)
+            {
+                return ResponseEntity.notFound().build();
+            }
         }
         return ResponseEntity.ok(quote);
     }
@@ -74,7 +62,7 @@ public class PonctualQuoteController {
 
     @PostMapping("/next-playlist")
     public ResponseEntity<?> nextPlaylistQuote() {
-        syncMessageClient.request("{\"type\":\"hourly\"}", playlistRequestQueue , playlistAnswerQueue, actionCreator.createPlaylistAnswerAction());
+        ponctualQuoteService.setNewPlaylist();
         return ResponseEntity.ok().build();
     }
 }
