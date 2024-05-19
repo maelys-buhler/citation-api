@@ -70,6 +70,14 @@ public class QuoteServiceImpl implements QuoteService {
     }
 
     @Override
+    public void sendNewPlaylistQuote(HourlyRequestDTO hourlyRequestDTO, String correlationID) {
+        if (hourlyRequestDTO.getType().equals("hourly")) {
+            QuoteDTO quoteDTO = getRandom();
+            jmsMessageProducer.sendPlaylistAnswer(quoteDTO, correlationID);
+        }
+    }
+
+    @Override
     public QuoteDTO getRandom() {
         Quote quote = quoteRepository.getRandom();
         if (quote == null) {

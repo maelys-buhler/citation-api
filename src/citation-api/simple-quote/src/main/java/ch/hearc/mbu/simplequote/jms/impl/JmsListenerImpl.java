@@ -43,4 +43,25 @@ public class JmsListenerImpl implements JmsMessageListener {
             LOGGER.error("Empty message received from hourly queue");
         }
     }
+
+    @JmsListener(destination = "${spring.activemq.playlist.request.queue}")
+    public void listenPlaylistRequest(final TextMessage jsonMessage) throws JMSException {
+        String messageData = null;
+        if(jsonMessage != null) {
+            messageData = jsonMessage.getText();
+            String correlationID = jsonMessage.getJMSCorrelationID();
+            LOGGER.info("Listen playlist request message received from queue");
+            try {
+                HourlyRequestDTO request = RequestMapper.mapJSONToObject(messageData);
+                quoteService.sendNewPlaylistQuote(request, correlationID);
+            }
+            catch (JsonProcessingException e) {
+                LOGGER.error("Error while parsing playlist request message");
+            }
+        }
+        else
+        {
+            LOGGER.error("Empty message received from hourly queue");
+        }
+    }
 }

@@ -1,11 +1,14 @@
 package ch.hearc.mbu.ponctualquote.service.impl;
 
 import ch.hearc.mbu.ponctualquote.dto.PonctualQuoteDTO;
+import ch.hearc.mbu.ponctualquote.jms_sync.CallbackCreator;
+import ch.hearc.mbu.ponctualquote.jms_sync.SyncMessageClient;
 import ch.hearc.mbu.ponctualquote.repository.PonctualQuoteRepository;
 import ch.hearc.mbu.ponctualquote.repository.model.PonctualQuote;
 import ch.hearc.mbu.ponctualquote.repository.model.QuoteStatus;
 import ch.hearc.mbu.ponctualquote.service.PonctualQuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +16,9 @@ public class PonctualQuoteServiceImpl implements PonctualQuoteService {
 
     @Autowired
     private PonctualQuoteRepository ponctualQuoteRepository;
+
+    @Autowired
+    private SyncMessageClient syncMessageClient;
 
     private PonctualQuoteDTO convertToDTO(PonctualQuote entity) {
         PonctualQuoteDTO dto = new PonctualQuoteDTO();
@@ -52,30 +58,25 @@ public class PonctualQuoteServiceImpl implements PonctualQuoteService {
     }
 
     @Override
-    public void nextPlaylistQuote() {
+    public PonctualQuote setNewPlaylist(PonctualQuoteDTO dto) {
         PonctualQuote entity = ponctualQuoteRepository.getPlaylistQuote();
         if (entity != null) {
             entity.setStatus(QuoteStatus.NONE);
             ponctualQuoteRepository.save(entity);
         }
-        PonctualQuote newPlaylistQuote = ponctualQuoteRepository.getRandomNone();
-        if (newPlaylistQuote == null) {
-            return;
-        }
+        PonctualQuote newPlaylistQuote = new PonctualQuote();
+        newPlaylistQuote.setQuote(dto.getQuote());
+        newPlaylistQuote.setAuthor(dto.getAuthor());
         newPlaylistQuote.setStatus(QuoteStatus.PLAYLIST);
         ponctualQuoteRepository.save(newPlaylistQuote);
+        return newPlaylistQuote;
     }
 
     @Override
     public PonctualQuoteDTO getPlaylistQuote() {
         PonctualQuote entity = ponctualQuoteRepository.getPlaylistQuote();
         if(entity == null) {
-            nextPlaylistQuote();
-            entity = ponctualQuoteRepository.getPlaylistQuote();
-            if (entity == null)
-            {
-                return null;
-            }
+            return null;
         }
         return convertToDTO(entity);
     }
