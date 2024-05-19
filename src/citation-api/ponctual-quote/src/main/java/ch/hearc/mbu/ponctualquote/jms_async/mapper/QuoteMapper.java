@@ -1,5 +1,6 @@
 package ch.hearc.mbu.ponctualquote.jms_async.mapper;
 
+import ch.hearc.mbu.ponctualquote.dto.AuthorDTO;
 import ch.hearc.mbu.ponctualquote.dto.PonctualQuoteDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,5 +23,18 @@ public class QuoteMapper {
         LOGGER.info("Formatted quote: " + formattedQuote);
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(formattedQuote, PonctualQuoteDTO.class);
+    }
+
+    public static String mapAuthorToJSON(AuthorDTO author) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.writeValueAsString(author);
+    }
+
+    public static AuthorDTO mapJSONToAuthor(String author) throws JsonProcessingException {
+        String formattedAuthor = author.replace("\\\"", "\"");
+        formattedAuthor = formattedAuthor.substring(1, formattedAuthor.length() - 1);
+        LOGGER.info("Formatted author: " + formattedAuthor);
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(formattedAuthor, AuthorDTO.class);
     }
 }

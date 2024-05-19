@@ -1,8 +1,11 @@
 package ch.hearc.mbu.ponctualquote.service.impl;
 
+import ch.hearc.mbu.ponctualquote.dto.AuthorDTO;
 import ch.hearc.mbu.ponctualquote.dto.PonctualQuoteDTO;
 import ch.hearc.mbu.ponctualquote.jms_sync.SyncMessageClient;
+import ch.hearc.mbu.ponctualquote.repository.AuthorRepository;
 import ch.hearc.mbu.ponctualquote.repository.PonctualQuoteRepository;
+import ch.hearc.mbu.ponctualquote.repository.model.Author;
 import ch.hearc.mbu.ponctualquote.repository.model.PonctualQuote;
 import ch.hearc.mbu.ponctualquote.repository.model.QuoteStatus;
 import ch.hearc.mbu.ponctualquote.service.PonctualQuoteService;
@@ -14,6 +17,9 @@ public class PonctualQuoteServiceImpl implements PonctualQuoteService {
 
     @Autowired
     private PonctualQuoteRepository ponctualQuoteRepository;
+
+    @Autowired
+    private AuthorRepository authorRepository;
 
     @Autowired
     private SyncMessageClient syncMessageClient;
@@ -38,6 +44,22 @@ public class PonctualQuoteServiceImpl implements PonctualQuoteService {
         entity.setStatus(QuoteStatus.LAST_ADDED);
         ponctualQuoteRepository.save(entity);
         return entity;
+    }
+
+    @Override
+    public Author setNewLastAddedAuthor(AuthorDTO dto)
+    {
+        Author author = authorRepository.getOne();
+        if(author != null) {
+            author.setName(dto.getName());
+            authorRepository.save(author);
+        }
+        else {
+            author = new Author();
+            author.setName(dto.getName());
+            authorRepository.save(author);
+        }
+        return author;
     }
 
     @Override
@@ -95,5 +117,16 @@ public class PonctualQuoteServiceImpl implements PonctualQuoteService {
             return null;
         }
         return convertToDTO(entity);
+    }
+
+    @Override
+    public AuthorDTO getLastAddedAuthor() {
+        Author entity = authorRepository.getOne();
+        if(entity == null) {
+            return null;
+        }
+        AuthorDTO dto = new AuthorDTO();
+        dto.setName(entity.getName());
+        return dto;
     }
 }

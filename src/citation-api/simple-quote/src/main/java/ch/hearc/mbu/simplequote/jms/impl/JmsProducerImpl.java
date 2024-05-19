@@ -1,5 +1,6 @@
 package ch.hearc.mbu.simplequote.jms.impl;
 
+import ch.hearc.mbu.simplequote.dto.AuthorDTO;
 import ch.hearc.mbu.simplequote.dto.QuoteDTO;
 import ch.hearc.mbu.simplequote.jms.mapper.RequestMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,6 +25,9 @@ public class JmsProducerImpl implements JmsMessageProducer {
 
     @Value("${spring.activemq.lastadded.notif.queue}")
     String lastAddedQuoteQueue;
+
+    @Value("${spring.activemq.lastadded.notif.author.queue}")
+    String lastAddedAuthorQueue;
 
     @Autowired
     JmsTemplate jmsTemplate;
@@ -80,6 +84,19 @@ public class JmsProducerImpl implements JmsMessageProducer {
             LOGGER.info("Last added notification: " + jsonMessage);
             jmsTemplate.convertAndSend(lastAddedQuoteQueue, jsonMessage);
             LOGGER.info("Last added notification sent to queue: " + lastAddedQuoteQueue);
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Error while mapping QuoteDTO to JSON: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void sendLastAddedAuthor(AuthorDTO authorDTO) {
+        String jsonMessage = null;
+        try {
+            jsonMessage = RequestMapper.mapAuthorToJSON(authorDTO);
+            LOGGER.info("Last added author notification: " + jsonMessage);
+            jmsTemplate.convertAndSend(lastAddedAuthorQueue, jsonMessage);
+            LOGGER.info("Last added author notification sent to queue: " + lastAddedAuthorQueue);
         } catch (JsonProcessingException e) {
             LOGGER.error("Error while mapping QuoteDTO to JSON: " + e.getMessage());
         }

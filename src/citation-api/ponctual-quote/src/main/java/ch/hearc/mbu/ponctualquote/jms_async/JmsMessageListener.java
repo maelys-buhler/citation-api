@@ -6,4 +6,5 @@ import jakarta.jms.TextMessage;
 
 public interface JmsMessageListener {
     void listenLastAddedQuote(final TextMessage jsonMessage) throws JMSException, JsonProcessingException;
+    void listenLastAddedAuthor(final TextMessage jsonMessage) throws JMSException, JsonProcessingException;
 }

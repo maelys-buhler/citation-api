@@ -4,6 +4,7 @@ import ch.hearc.mbu.simplequote.dto.AuthorDTO;
 import ch.hearc.mbu.simplequote.repository.AuthorRepository;
 import ch.hearc.mbu.simplequote.repository.model.Author;
 import ch.hearc.mbu.simplequote.service.AuthorService;
+import ch.hearc.mbu.simplequote.jms.JmsMessageProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,9 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Autowired
     private AuthorRepository authorRepository;
+
+    @Autowired
+    private JmsMessageProducer jmsMessageProducer;
 
     @Override
     public AuthorDTO convertToDTO(Author entity) {
@@ -31,7 +35,9 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public long create(AuthorDTO dto) {
-        return authorRepository.save(convertToEntity(dto)).getId();
+        Author author =  authorRepository.save(convertToEntity(dto));
+        jmsMessageProducer.sendLastAddedAuthor(convertToDTO(author));
+        return author.getId();
     }
 
     @Override

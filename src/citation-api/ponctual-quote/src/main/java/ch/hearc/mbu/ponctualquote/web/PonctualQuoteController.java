@@ -1,8 +1,10 @@
 package ch.hearc.mbu.ponctualquote.web;
 
+import ch.hearc.mbu.ponctualquote.dto.AuthorDTO;
 import ch.hearc.mbu.ponctualquote.dto.PonctualQuoteDTO;
 import ch.hearc.mbu.ponctualquote.jms_sync.ActionCreator;
 import ch.hearc.mbu.ponctualquote.jms_sync.SyncMessageClient;
+import ch.hearc.mbu.ponctualquote.repository.model.Author;
 import ch.hearc.mbu.ponctualquote.service.PonctualQuoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,6 +61,15 @@ public class PonctualQuoteController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(quote);
+    }
+
+    @GetMapping("/last-added-author")
+    public ResponseEntity<?> getLastAddedAuthor() {
+        AuthorDTO author = ponctualQuoteService.getLastAddedAuthor();
+        if(author == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(author);
     }
 
     @PostMapping("/next-playlist")

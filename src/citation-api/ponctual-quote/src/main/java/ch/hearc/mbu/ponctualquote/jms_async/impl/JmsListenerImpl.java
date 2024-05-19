@@ -1,5 +1,6 @@
 package ch.hearc.mbu.ponctualquote.jms_async.impl;
 
+import ch.hearc.mbu.ponctualquote.dto.AuthorDTO;
 import ch.hearc.mbu.ponctualquote.dto.PonctualQuoteDTO;
 import ch.hearc.mbu.ponctualquote.jms_async.JmsMessageListener;
 import ch.hearc.mbu.ponctualquote.jms_async.mapper.QuoteMapper;
@@ -39,6 +40,26 @@ public class JmsListenerImpl implements JmsMessageListener {
         else
         {
             System.out.println("Empty message received from last added quote queue");
+        }
+    }
+
+    @Override
+    @JmsListener(destination = "${spring.activemq.lastadded.notif.author.queue}")
+    public void listenLastAddedAuthor(final TextMessage jsonMessage) throws JMSException {
+        if(jsonMessage != null) {
+            String messageData = jsonMessage.getText();
+            LOGGER.info("Listen last added author message received from queue");
+            try {
+                AuthorDTO author = QuoteMapper.mapJSONToAuthor(messageData);
+                ponctualQuoteService.setNewLastAddedAuthor(author);
+            }
+            catch (JsonProcessingException e) {
+                LOGGER.error("Error while parsing last added author message");
+            }
+        }
+        else
+        {
+            System.out.println("Empty message received from last added author queue");
         }
     }
 }
