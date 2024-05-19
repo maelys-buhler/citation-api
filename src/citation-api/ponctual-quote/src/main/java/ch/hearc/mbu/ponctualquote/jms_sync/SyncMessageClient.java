@@ -17,17 +17,11 @@ import org.springframework.jms.support.destination.DestinationResolver;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.function.Function;
 
 @Component
 public class SyncMessageClient {
-    @Value("${spring.activemq.hourly.request.queue}")
-    String hourlyRequestQueue;
-
-    @Value("${spring.activemq.hourly.answer.queue}")
-    String hourlyAnswerQueue;
-
-    @Autowired
-    PonctualQuoteService ponctualQuoteService;
 
     // Source: https://bdarfler.medium.com/synchronous-request-response-with-activemq-and-spring-21359a438a86
     private static final class ProducerConsumer implements SessionCallback<Message> {
@@ -39,13 +33,13 @@ public class SyncMessageClient {
         private final DestinationResolver destinationResolver;
         private final String requestQueue;
         private final String answerQueue;
-        private final PonctualQuoteService ponctualQuoteService;
-        public ProducerConsumer( final String msg, final String requestQueue, final String answerQueue, final DestinationResolver destinationResolver, final PonctualQuoteService ponctualQuoteService) {
+        private final Function callback;
+        public ProducerConsumer( final String msg, final String requestQueue, final String answerQueue, final DestinationResolver destinationResolver, final Function callback) {
             this.msg = msg;
             this.destinationResolver = destinationResolver;
             this.requestQueue = requestQueue;
             this.answerQueue = answerQueue;
-            this.ponctualQuoteService = ponctualQuoteService;
+            this.callback = callback;
         }
         public Message doInJms( final Session session ) throws JMSException {
             MessageConsumer consumer = null;
@@ -66,27 +60,7 @@ public class SyncMessageClient {
                 producer.send( requestQueue, textMessage );
                 // Block on receiving the response with a timeout
                 Message message = consumer.receive(TIMEOUT);
-                LOGGER.info("Listen hourly answer message received from queue " + answerQueue);
-                String messageData = null;
-                try {
-                    messageData = message.getBody(String.class);
-                } catch (JMSException e) {
-                    LOGGER.error("Could not get message body to string");
-                }
-                LOGGER.info("data received: " + messageData);
-                if(messageData != null) {
-                    try {
-                        PonctualQuoteDTO quote = QuoteMapper.mapJSONToQuote(messageData);
-                        ponctualQuoteService.setNewHourly(quote);
-                    }
-                    catch (JsonProcessingException e) {
-                        LOGGER.warn("The message received is not a valid Quote. This probably means that the message received is an error message, indicating that no quote is available.");
-                    }
-                }
-                else
-                {
-                    LOGGER.error("Empty message received from hourly queue");
-                }
+                callback.apply(message);
                 return message;
             }
             finally {
@@ -103,8 +77,8 @@ public class SyncMessageClient {
     public SyncMessageClient( final JmsTemplate jmsTemplate ) {
         this.jmsTemplate = jmsTemplate;
     }
-    public String request( final String request) {
+    public String request(final String request, final String hourlyRequestQueue, final String hourlyAnswerQueue, final Function<Message, Boolean> callback) {
         // Must pass true as the second param to start the connection
-        return jmsTemplate.execute( new ProducerConsumer(request, hourlyRequestQueue, hourlyAnswerQueue, jmsTemplate.getDestinationResolver(), ponctualQuoteService), true ).toString();
+        return jmsTemplate.execute( new ProducerConsumer(request, hourlyRequestQueue, hourlyAnswerQueue, jmsTemplate.getDestinationResolver(), callback), true ).toString();
     }
 }
