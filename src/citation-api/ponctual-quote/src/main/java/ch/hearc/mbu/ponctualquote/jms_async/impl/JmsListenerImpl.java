@@ -22,27 +22,6 @@ public class JmsListenerImpl implements JmsMessageListener {
     @Autowired
     PonctualQuoteService ponctualQuoteService;
 
-//    @Override
-//    @JmsListener(destination = "${spring.activemq.hourly.answer.queue}")
-//    public void listenHourlyAnswer(final TextMessage jsonMessage) throws JMSException {
-//        LOGGER.info("Listen hourly answer message received from queue");
-//        LOGGER.info("data received: " + jsonMessage.getText());
-//        if(jsonMessage != null) {
-//            String messageData = jsonMessage.getText();
-//            try {
-//                PonctualQuoteDTO quote = QuoteMapper.mapJSONToQuote(messageData);
-//                ponctualQuoteService.setNewHourly(quote);
-//            }
-//            catch (JsonProcessingException e) {
-//                LOGGER.error("Error while parsing hourly request message");
-//            }
-//        }
-//        else
-//        {
-//            LOGGER.error("Empty message received from hourly queue");
-//        }
-//    }
-
     @Override
     @JmsListener(destination = "${spring.activemq.lastadded.notif.queue}")
     public void listenLastAddedQuote(final TextMessage jsonMessage) throws JMSException {
