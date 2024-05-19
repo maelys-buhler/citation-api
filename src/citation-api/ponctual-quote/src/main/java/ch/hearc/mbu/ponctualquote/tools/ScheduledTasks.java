@@ -1,13 +1,13 @@
 package ch.hearc.mbu.ponctualquote.tools;
-
-import ch.hearc.mbu.ponctualquote.jms.JmsMessageProducer;
-import ch.hearc.mbu.ponctualquote.jms.impl.JmsListenerImpl;
-import ch.hearc.mbu.ponctualquote.service.PonctualQuoteService;
+import ch.hearc.mbu.ponctualquote.jms_sync.ActionCreator;
+import ch.hearc.mbu.ponctualquote.jms_sync.SyncMessageClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+
 
 @Component
 public class ScheduledTasks {
@@ -15,11 +15,20 @@ public class ScheduledTasks {
             .getLogger(ScheduledTasks.class);
 
     @Autowired
-    JmsMessageProducer jmsMessageProducer;
+    SyncMessageClient syncMessageClient;
 
-    @Scheduled(fixedRate = 60 * 60 * 1000)
+    @Autowired
+    ActionCreator actionCreator;
+
+    @Value("${spring.activemq.hourly.answer.queue}")
+    private String hourlyAnswerQueue;
+
+    @Value("${spring.activemq.hourly.request.queue}")
+    private String hourlyRequestQueue;
+
+    @Scheduled(fixedRate = 10 * 1000)
     public void sendHourlyRequest() {
-        jmsMessageProducer.sendHourlyRequest();
         LOGGER.info("Hourly Scheduled Task executed");
+        syncMessageClient.request("{\"type\":\"hourly\"}", hourlyRequestQueue, hourlyAnswerQueue, actionCreator.createHourlyAnswerAction());
     }
 }
