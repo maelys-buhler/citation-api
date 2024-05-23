@@ -1,3 +1,10 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Ponctual Quote
+ * Content: Controller to define REST entrypoint
+ * Date: May 2024
+ */
+
 package ch.hearc.mbu.ponctualquote.web;
 
 import ch.hearc.mbu.ponctualquote.dto.AuthorDTO;

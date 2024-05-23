@@ -1,3 +1,10 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Ponctual Quote
+ * Content: Ponctual Quote Repository
+ * Date: May 2024
+ */
+
 package ch.hearc.mbu.ponctualquote.repository;
 
 import ch.hearc.mbu.ponctualquote.repository.model.PonctualQuote;

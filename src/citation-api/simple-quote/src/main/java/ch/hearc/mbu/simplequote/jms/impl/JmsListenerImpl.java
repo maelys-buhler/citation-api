@@ -1,3 +1,10 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Ponctual Quote
+ * Content: Implementation of the JMS Listener
+ * Date: May 2024
+ */
+
 package ch.hearc.mbu.simplequote.jms.impl;
 
 import ch.hearc.mbu.simplequote.dto.HourlyRequestDTO;

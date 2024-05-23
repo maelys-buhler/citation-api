@@ -1,3 +1,10 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Ponctual Quote
+ * Content: Author DTO
+ * Date: May 2024
+ */
+
 package ch.hearc.mbu.simplequote.dto;
 import jakarta.validation.constraints.*;
 public class AuthorDTO {

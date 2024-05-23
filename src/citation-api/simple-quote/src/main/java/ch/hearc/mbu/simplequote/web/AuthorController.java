@@ -1,3 +1,10 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Simple Quote
+ * Content: Author Controller REST Endpoints
+ * Date: May 2024
+ */
+
 package ch.hearc.mbu.simplequote.web;
 
 import ch.hearc.mbu.simplequote.dto.AuthorDTO;

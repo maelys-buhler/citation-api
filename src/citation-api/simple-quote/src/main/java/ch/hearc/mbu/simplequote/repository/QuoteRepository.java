@@ -1,3 +1,10 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Simple Quote
+ * Content: Quote Repository
+ * Date: May 2024
+ */
+
 package ch.hearc.mbu.simplequote.repository;
 
 import ch.hearc.mbu.simplequote.repository.model.Quote;

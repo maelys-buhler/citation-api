@@ -1,3 +1,10 @@
+/*
+* Author: Maëlys Bühler
+* Service: API Gateway
+* Content: Main function
+* Date: May 2024
+ */
+
 package ch.hearc.mbu.apigateway;
 
 import org.springframework.boot.SpringApplication;

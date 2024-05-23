@@ -1,3 +1,10 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Ponctual Quote
+ * Content: Request Mapper Object to JSON and inverse
+ * Date: May 2024
+ */
+
 package ch.hearc.mbu.simplequote.jms.mapper;
 
 import ch.hearc.mbu.simplequote.dto.AuthorDTO;

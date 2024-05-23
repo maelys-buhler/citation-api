@@ -1,3 +1,9 @@
+/*
+ * Source: Exemple project voting-service
+ * Service: Simple Quote
+ * Content: ActiveMQConfiguration
+ */
+
 package ch.hearc.mbu.simplequote.jms;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
