@@ -1,3 +1,10 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Simple Quote
+ * Content: Author Model
+ * Date: May 2024
+ */
+
 package ch.hearc.mbu.simplequote.repository.model;
 
 import jakarta.persistence.*;

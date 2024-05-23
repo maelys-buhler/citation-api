@@ -1,3 +1,10 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Simple Quote
+ * Content: Quote Service
+ * Date: May 2024
+ */
+
 package ch.hearc.mbu.simplequote.service;
 
 import ch.hearc.mbu.simplequote.dto.HourlyRequestDTO;

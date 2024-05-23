@@ -1,3 +1,10 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Simple Quote
+ * Content: JMS Message Producer Interface
+ * Date: May 2024
+ */
+
 package ch.hearc.mbu.simplequote.jms;
 
 import ch.hearc.mbu.simplequote.dto.AuthorDTO;

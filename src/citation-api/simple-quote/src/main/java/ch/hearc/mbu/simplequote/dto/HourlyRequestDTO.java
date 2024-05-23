@@ -1,3 +1,10 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Ponctual Quote
+ * Content: HourlyRequest DTO
+ * Date: May 2024
+ */
+
 package ch.hearc.mbu.simplequote.dto;
 
 public class HourlyRequestDTO {

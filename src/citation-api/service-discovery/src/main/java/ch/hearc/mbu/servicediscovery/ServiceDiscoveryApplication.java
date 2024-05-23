@@ -1,3 +1,9 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Service Discovery
+ * Content: Service Discovery Main function
+ * Date: May 2024
+ */
 package ch.hearc.mbu.servicediscovery;
 
 import org.springframework.boot.SpringApplication;

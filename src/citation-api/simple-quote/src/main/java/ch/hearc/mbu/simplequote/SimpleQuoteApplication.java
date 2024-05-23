@@ -1,3 +1,10 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Simple Quote
+ * Content: Simple Quote Main Function
+ * Date: May 2024
+ */
+
 package ch.hearc.mbu.simplequote;
 
 import org.springframework.boot.SpringApplication;
