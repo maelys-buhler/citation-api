@@ -1,3 +1,11 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Ponctual Quote
+ * Content: Quote Model
+ * Date: May 2024
+ */
+
+
 package ch.hearc.mbu.ponctualquote.repository.model;
 
 import jakarta.persistence.*;

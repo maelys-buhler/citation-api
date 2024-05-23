@@ -1,3 +1,10 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Ponctual Quote
+ * Content: Tools to send a request every hour
+ * Date: May 2024
+ */
+
 package ch.hearc.mbu.ponctualquote.tools;
 import ch.hearc.mbu.ponctualquote.jms_sync.ActionCreator;
 import ch.hearc.mbu.ponctualquote.jms_sync.SyncMessageClient;
@@ -26,7 +33,7 @@ public class ScheduledTasks {
     @Value("${spring.activemq.hourly.request.queue}")
     private String hourlyRequestQueue;
 
-    @Scheduled(fixedRate = 10 * 1000)
+    @Scheduled(fixedRate = 60 * 60 * 1000)
     public void sendHourlyRequest() {
         LOGGER.info("Hourly Scheduled Task executed");
         syncMessageClient.request("{\"type\":\"hourly\"}", hourlyRequestQueue, hourlyAnswerQueue, actionCreator.createHourlyAnswerAction());

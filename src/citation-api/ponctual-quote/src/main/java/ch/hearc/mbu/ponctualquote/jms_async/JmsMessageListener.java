@@ -1,3 +1,10 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Ponctual Quote
+ * Content: Interface of JMS Listener
+ * Date: May 2024
+ */
+
 package ch.hearc.mbu.ponctualquote.jms_async;
 
 import com.fasterxml.jackson.core.JsonProcessingException;

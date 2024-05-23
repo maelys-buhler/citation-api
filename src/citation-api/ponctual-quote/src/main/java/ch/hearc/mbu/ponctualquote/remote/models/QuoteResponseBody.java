@@ -1,3 +1,10 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Ponctual Quote
+ * Content: Model of response body from simple-quote
+ * Date: May 2024
+ */
+
 package ch.hearc.mbu.ponctualquote.remote.models;
 
 public class QuoteResponseBody {

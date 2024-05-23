@@ -1,3 +1,10 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Ponctual Quote
+ * Content: Implementation of the ponctual quote service
+ * Date: May 2024
+ */
+
 package ch.hearc.mbu.ponctualquote.service.impl;
 
 import ch.hearc.mbu.ponctualquote.dto.AuthorDTO;

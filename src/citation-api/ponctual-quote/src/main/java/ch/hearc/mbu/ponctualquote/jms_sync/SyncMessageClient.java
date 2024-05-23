@@ -1,3 +1,10 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Ponctual Quote
+ * Content: Client of Synchronized JMS exchanges
+ * Date: May 2024
+ */
+
 package ch.hearc.mbu.ponctualquote.jms_sync;
 
 import jakarta.jms.*;

@@ -1,3 +1,10 @@
+/*
+ * Author: Maëlys Bühler
+ * Service: Ponctual Quote
+ * Content: Creates function to call after synchronized JMS message
+ * Date: May 2024
+ */
+
 package ch.hearc.mbu.ponctualquote.jms_sync;
 
 import ch.hearc.mbu.ponctualquote.dto.PonctualQuoteDTO;

@@ -1,3 +1,9 @@
+/*
+ * Source: Exemple project voting-service
+ * Service: Ponctual Quote
+ * Content: ActiveMQConfiguration
+ */
+
 package ch.hearc.mbu.ponctualquote.jms_async;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,7 +22,7 @@ import org.springframework.jms.support.converter.MessageType;
 import org.springframework.jms.support.destination.DynamicDestinationResolver;
 
 
-//Source: Projet exemple voting-service
+
 
 
 @Configuration
