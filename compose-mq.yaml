@@ -1,5 +1,4 @@
 services:
-
   active_mq:
     image: apache/activemq-artemis:latest-alpine
     container_name: rabbitmq
@@ -10,4 +9,10 @@ services:
       - ARTEMIS_USER=mq
       - ARTEMIS_PASSWORD=mq
 
-
+  quote-db:
+    container_name: quote-db
+    image: mysql:8.2.0-oracle 
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - "3306:3306"

@@ -33,7 +33,7 @@ public class ScheduledTasks {
     @Value("${spring.activemq.hourly.request.queue}")
     private String hourlyRequestQueue;
 
-    @Scheduled(fixedRate = 60 * 60 * 1000)
+    @Scheduled(fixedRate = 10 * 1000)
     public void sendHourlyRequest() {
         LOGGER.info("Hourly Scheduled Task executed");
         syncMessageClient.request("{\"type\":\"hourly\"}", hourlyRequestQueue, hourlyAnswerQueue, actionCreator.createHourlyAnswerAction());
