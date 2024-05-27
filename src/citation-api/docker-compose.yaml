@@ -1,0 +1,98 @@
+services:
+  quote-db:
+    container_name: quote-db
+    image: mysql:8.2.0-oracle 
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - "3306:3306"
+
+  quote-active-mq:
+    image: apache/activemq-artemis:latest-alpine
+    container_name: quote-active-mq
+    ports:
+      - "61616:61616"
+      - "8161:8161"
+    environment:
+      - ARTEMIS_USER=mq
+      - ARTEMIS_PASSWORD=mq
+
+
+  simple-quote:
+    image: maven:latest
+    container_name: simple-quote
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./simple-quote/:/src
+    working_dir: /src
+    command: mvn spring-boot:run -e
+    depends_on:
+      - quote-active-mq
+      - quote-db
+    environment:
+      - TZ=Europe/Berlin
+      - EUREKA_SERVER=http://quote-service-discovery:8761/eureka
+      - ACTIVEMQ_URI=tcp://quote-active-mq:61616
+      - MYSQL_DB=jdbc:mysql://quote-db:3306/simple-quote?createDatabaseIfNotExist=true
+    healthcheck:
+      test: curl --fail http://localhost:8080/authors/ || exit 1
+      interval: 30s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  ponctual-quote:
+    image: maven:3.9-eclipse-temurin-21 
+    container_name: ponctual-quote
+    ports:
+      - "8081:8081"
+    volumes:
+      - ./ponctual-quote/:/src
+    working_dir: /src
+    command: mvn spring-boot:run -e
+    depends_on:
+      quote-service-discovery:
+        condition: service_started
+      quote-active-mq:
+        condition: service_started
+      simple-quote:
+        condition: service_healthy        
+      quote-db:
+        condition: service_started
+      
+
+    environment:
+      - TZ=Europe/Berlin
+      - EUREKA_SERVER=http://quote-service-discovery:8761/eureka
+      - ACTIVEMQ_URI=tcp://quote-active-mq:61616
+      - MYSQL_DB=jdbc:mysql://quote-db:3306/ponctual-quote?createDatabaseIfNotExist=true
+
+  quote-service-discovery:
+    image: maven:latest
+    container_name: quote-service-discovery
+    ports:
+      - "8762:8761"
+    volumes:
+      - ./service-discovery/:/src
+    working_dir: /src
+    command: mvn spring-boot:run -e
+    environment:
+      - TZ=Europe/Berlin
+
+  
+  quote-api-gateway:
+    image: maven:latest
+    container_name: quote-api-gateway
+    ports:
+      - "9999:9999"
+    volumes:
+      - ./api-gateway/:/src
+    working_dir: /src
+    command: mvn spring-boot:run -X
+    depends_on:
+      - quote-service-discovery
+    environment:
+      - TZ=Europe/Berlin
+      - EUREKA_URI=http://quote-service-discovery:8761/eureka
+
